@@ -113,6 +113,9 @@ describe API::V1::Widgets do
     before do
       3.times { FactoryGirl.create(:widget) }
     end
+    it 'makes semaphore fail' do
+      expect(1).to eql 2
+    end
     it 'returns a list of widgets' do
       req :get, "/widgets"
       expect(response.status).to eql 200
