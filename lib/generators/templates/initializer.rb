@@ -1,6 +1,6 @@
 GrapeApeRails.configure do |config|
   config.app_name = "%%APPNAME%%"
-  config.organization_name = "&&ORGNAME&&"
+  config.organization_name = "%%ORGNAME%%"
   config.api_secret_key = "%%APIKEY%%"
   # config.api_header_security_enabled = true
   # config.api_security_algorithm = "sha256"

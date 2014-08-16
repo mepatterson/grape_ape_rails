@@ -1,12 +1,11 @@
 GrapeApeRails.configure do |config|
-  config.organization_name = "monkeyworks"
   config.app_name = "titan"
-  config.api_secret_key = "123456fakefakefake123456"
+  config.organization_name = "monkeyworks"
+  config.api_secret_key = "eb29e6a98f5e2fe8baa171bad1661d97f8bc68106026db58b153d8abaf843a87"
   # config.api_header_security_enabled = true
   # config.api_security_algorithm = "sha256"
-  # config.api_header_security_uses_request_body = false
-  config.security_envelope_debug = false
-  config.available_locales = %i[ en jp es de ]
+  # config.security_envelope_debug = false
+  config.available_locales = %i[ en jp es ]
 end
 
 # Subscribe to grape request and log with Rails.logger
