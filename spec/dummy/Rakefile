@@ -1,0 +1,15 @@
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+
+require File.expand_path('../config/application', __FILE__)
+
+Dummy::Application.load_tasks
+desc "Print out Grape routes"
+task :grape_routes => :environment do
+  API::Base.routes.each do |route|
+    info = route.instance_variable_get :@options
+    description = "%-40s..." % info[:description][0..39]
+    method = "%-7s" % info[:method]
+    puts "#{description}  [#{info[:version]}] #{method}#{info[:path]}"
+  end
+end
