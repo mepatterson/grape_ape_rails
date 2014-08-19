@@ -64,8 +64,6 @@ base.rb file in `app/controllers/api/base.rb`
 module API
   class Base < GrapeApeRails::API
     grape_apis do
-      # always mount admins first and public-facing versions after
-      # with newest version lowest
       api "V1" do
         # ... mounts go here
       end
