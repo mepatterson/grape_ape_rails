@@ -1,47 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Grape-Ape-Rails by mepatterson</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
     <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+    <title>Grape-Ape-Rails by mepatterson</title>
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/mepatterson/grape_ape_rails">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/mepatterson/grape_ape_rails/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/mepatterson/grape_ape_rails/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
+    <header>
+      <div class="inner">
+        <h1>Grape-Ape-Rails</h1>
+        <h2>When you absolutely need some Grape in your Vanilla Rails, without all the setup hassle.</h2>
+        <a href="https://github.com/mepatterson/grape_ape_rails" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-    <div class="wrapper">
-
-      <section>
-        <div id="title">
-          <h1>Grape-Ape-Rails</h1>
-          <p>When you absolutely need some Grape in your Vanilla Rails, without all the setup hassle.</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/mepatterson">mepatterson</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
-
-        <h1>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
 <a name="grapeaperails" class="anchor" href="#grapeaperails"><span class="octicon octicon-link"></span></a>GrapeApeRails</h1>
 
-<p>TODO: Write a gem description</p>
+<p>The general purpose of this gem is to wrap the various best practices of integrating GrapeAPI within the context of a Rails app
+into an easy-to-use macro-framework and DSL, plus some opinionated value-adds and features. Basically, Grape and Rails play
+together great, but can be tricky to integrate in a robust, clean way; GrapeApeRails (hopefully) makes your life easier.</p>
+
+<h2>
+<a name="featuresopinions" class="anchor" href="#featuresopinions"><span class="octicon octicon-link"></span></a>Features/Opinions</h2>
+
+<p>GrapeApeRails is opinionated. The goal is to make integration easier, so GrapeApeRails makes a number of integration decisions for you:</p>
+
+<ul>
+<li>API endpoints respond with JSON</li>
+<li>API endpoints expect serialized JSON strings for POST and PUT bodies</li>
+<li>JSON responses are wrapped in a structure that mostly resembles the JSON-RPC spec</li>
+<li>GrapeApeRails APIs are header-versioned using the 'Accept' HTTP header</li>
+<li>API endpoints automatically handle locale if provided (either via params[:locale] or the 'Accept-Language' header) and use the <code>http_accept_language</code> middleware</li>
+<li>GrapeApeRails provides an ActiveSupport::Notification that can be suscribed to for logging/injection into the Rails log</li>
+<li>Pagination support is already included for all endpoints via the <a href="https://github.com/monterail/grape-kaminari">grape-kaminari gem</a>
+</li>
+<li>Rails cache support is already included for all endpoints via the <a href="https://github.com/monterail/grape-rails-cache">grape-rails-cache gem</a>
+</li>
+<li>API endpoints are automagically documented into <a href="https://helloreverb.com/developers/swagger">Swagger API XML docs</a>, presented by your API via mounted endpoints</li>
+<li>Swagger-documented APIs are automatically separated into different URIs by API version</li>
+</ul><p>If these opinions and features align closely to what you're planning to build for your API, I think you'll find GrapeApeRails very useful.
+If you're intending to build something very different from the above, you're probably better off integrating Grape on your own, or looking at alternate projects
+like <a href="https://github.com/rails-api/rails-api">Rails::API</a>.</p>
 
 <h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -62,24 +76,229 @@
 </code></pre>
 
 <h2>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
+
+<p>First, GrapeApeRails needs an initializer as <code>config/initializers/grape_ape_rails.rb</code></p>
+
+<p>The easiest way to do this is to run the handy rails generator command:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">rails</span> <span class="n">g</span> <span class="ss">grape_ape_rails</span><span class="p">:</span><span class="n">setup</span>
+</pre></div>
+
+<p>This will:</p>
+
+<ul>
+<li>create your initializer with some default settings, based on how you answer the questions</li>
+<li>add a <code>tilt.root</code> Rack config to your application.rb for use with Rabl templates</li>
+</ul><p>Next, you'll need to create your <code>API::Base</code> class, which serves as the starting point for all
+of your API endpoints and all versions of your API. By default, GrapeApeRails looks for a
+base.rb file in <code>app/controllers/api/base.rb</code></p>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># app/controllers/api/base.rb</span>
+<span class="k">module</span> <span class="nn">API</span>
+  <span class="k">class</span> <span class="nc">Base</span> <span class="o">&lt;</span> <span class="no">GrapeApeRails</span><span class="o">::</span><span class="no">API</span>
+    <span class="n">grape_apis</span> <span class="k">do</span>
+      <span class="n">api</span> <span class="s2">"V1"</span> <span class="k">do</span>
+        <span class="c1"># ... mounts go here</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>NOTE: the api name needs to look like a class name, with camelcase (e.g. "V1" or "AdminV1").
+This actually <em>is</em> the class that GrapeApeRails will then expect you to define for exposing your endpoints.
+Internally, Grape will translate this to an under-dotted version name (e.g "v1" or "admin.v1")
+and this is what will be expected in the Accept header string provided by the requestor.</p>
+
+<h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>TODO: Write usage instructions here</p>
+<p>Now that you've got your base.rb ready, you need to mount your various resources/endpoints. This is
+done via the <code>grape_mount</code> command. These should generally be mounted as pluralized resource names.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># inside the base.rb ...</span>
+<span class="n">api</span> <span class="s2">"V1"</span> <span class="k">do</span>
+  <span class="n">grape_mount</span> <span class="ss">:widgets</span>
+  <span class="n">grape_mount</span> <span class="ss">:robots</span>
+  <span class="n">grape_mount</span> <span class="ss">:pirates</span>
+  <span class="c1"># ... etc</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>If you try to spin up your app now, it will complain that you need to actually create the class files
+for each of the resources you've mounted. So let's do that in a 'v1' subfolder...</p>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># app/controllers/api/v1/widgets.rb</span>
+<span class="k">module</span> <span class="nn">API</span>
+  <span class="k">module</span> <span class="nn">V1</span>
+    <span class="k">class</span> <span class="nc">Widgets</span> <span class="o">&lt;</span> <span class="no">GrapeApeRails</span><span class="o">::</span><span class="no">API</span>
+      <span class="kp">include</span> <span class="no">GrapeApeRails</span><span class="o">::</span><span class="no">Handlers</span><span class="o">::</span><span class="no">All</span>
+
+      <span class="n">resource</span> <span class="ss">:widgets</span> <span class="k">do</span>
+        <span class="n">desc</span> <span class="s2">"Get a single Widget"</span>
+        <span class="n">get</span> <span class="s1">':id'</span><span class="p">,</span> <span class="ss">rabl</span><span class="p">:</span> <span class="s1">'v1/widget'</span> <span class="k">do</span>
+          <span class="vi">@widget</span> <span class="o">=</span> <span class="no">Widget</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+          <span class="vi">@widget</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>In this case, I've simply created a <code>/widgets/:id</code> endpoint, but you can define whatever endpoints you want.
+Because you've defined this within the :widgets resource, the API will assume all of these endpoints begin
+with <code>/widgets</code></p>
+
+<h3>
+<a name="rabl" class="anchor" href="#rabl"><span class="octicon octicon-link"></span></a>Rabl</h3>
+
+<p>In my example, I'm using the default Rabl-based templating. The <code>rabl</code> parameter expects a path to the .rabl template file,
+as found within /app/views/api/ ... all Rabl functionality should work as expected.</p>
+
+<h3>
+<a name="activemodel-serializers" class="anchor" href="#activemodel-serializers"><span class="octicon octicon-link"></span></a>ActiveModel Serializers</h3>
+
+<p>If you'd prefer ActiveModel Serializers over Rabl, GrapeApeRails supports that as well via a custom Grape formatter
+called <code>Grape::Formatter::GarActiveModelSerializers</code>. To use it, just override the <code>formatter</code> within each of your API
+classes.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="k">module</span> <span class="nn">API</span>
+  <span class="k">module</span> <span class="nn">V1</span>
+    <span class="k">class</span> <span class="nc">Monkeys</span> <span class="o">&lt;</span> <span class="no">GrapeApeRails</span><span class="o">::</span><span class="no">API</span>
+      <span class="kp">include</span> <span class="no">GrapeApeRails</span><span class="o">::</span><span class="no">Handlers</span><span class="o">::</span><span class="no">All</span>
+
+      <span class="n">formatter</span> <span class="ss">:json</span><span class="p">,</span> <span class="no">Grape</span><span class="o">::</span><span class="no">Formatter</span><span class="o">::</span><span class="no">GarActiveModelSerializers</span>
+
+      <span class="n">resource</span> <span class="ss">:monkeys</span> <span class="k">do</span>
+        <span class="n">desc</span> <span class="s2">"Get a single Monkey"</span>
+        <span class="n">get</span> <span class="s1">':id'</span> <span class="k">do</span>
+          <span class="vi">@monkey</span> <span class="o">=</span> <span class="no">Monkey</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+          <span class="vi">@monkey</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>In this case, it's expected that you've defined a MonkeySerializer class in your models directory, as usual with ActiveModelSerializers.</p>
+
+<h3>
+<a name="json-response-structures" class="anchor" href="#json-response-structures"><span class="octicon octicon-link"></span></a>JSON Response Structures</h3>
+
+<p>Similar to the JSON-RPC spec, endpoints exposed using GrapeApeRails will present either a <code>result</code> hash or an <code>error</code> hash.
+The error hash will be composed of a <code>code</code> (a machine-friendly enum-like uppercase string) and a
+message (human-friendly, user-presentable message that includes the code inside brackets).</p>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># Successful response</span>
+<span class="p">{</span>
+  <span class="s2">"result"</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"widgets"</span> <span class="p">:</span> <span class="o">[</span>
+      <span class="p">{</span> <span class="s2">"id"</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span> <span class="p">:</span> <span class="s2">"Fancy Widget"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="s2">"id"</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"name"</span> <span class="p">:</span> <span class="s2">"Other Thing"</span> <span class="p">},</span>
+      <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+    <span class="o">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Error response</span>
+<span class="p">{</span>
+  <span class="s2">"error"</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"code"</span> <span class="p">:</span> <span class="s2">"UNAUTHORIZED"</span><span class="p">,</span>
+    <span class="s2">"message"</span> <span class="p">:</span> <span class="s2">"[UNAUTHORIZED] Requires a valid user authorization"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>In the case of a validation error on a resource, there will additionally be a <code>data</code> key inside the error hash that includes Rails-style validation errors.</p>
+
+<p>IMPORTANT: In defining response structures, I made the decision (based on lots of research) to go with a plural resource key and an <em>always-array</em> approach in the
+response hash. To put it another way:</p>
+
+<p>If you ask for /widgets/1 you will get</p>
+
+<p><code>{ "result" : { "widgets" : [ {&lt;widget&gt;} ] } }</code></p>
+
+<p>and if you ask for /widgets you will get</p>
+
+<p><code>{ "result" : { "widgets" : [ {widget1}, {widget2}, {widget3}, ... ] } }</code></p>
+
+<h3>
+<a name="pagination" class="anchor" href="#pagination"><span class="octicon octicon-link"></span></a>Pagination</h3>
+
+<p>GrapeApeRails uses Kaminari for pagination via the <a href="https://github.com/monterail/grape-kaminari">grape-kaminari</a> gem.</p>
+
+<p>Enabling pagination on a resource is super-simple:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># inside your API resource class...</span>
+<span class="n">desc</span> <span class="s2">"Return a list of Widgets"</span>
+<span class="n">params</span> <span class="ss">:pagination</span> <span class="k">do</span>
+  <span class="n">optional</span> <span class="ss">:page</span><span class="p">,</span>     <span class="ss">type</span><span class="p">:</span> <span class="nb">Integer</span>
+  <span class="n">optional</span> <span class="ss">:per_page</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="nb">Integer</span>
+  <span class="n">optional</span> <span class="ss">:offset</span><span class="p">,</span>   <span class="ss">type</span><span class="p">:</span> <span class="nb">Integer</span>
+<span class="k">end</span>
+<span class="n">paginate</span> <span class="ss">per_page</span><span class="p">:</span> <span class="mi">30</span>
+<span class="n">get</span> <span class="s1">'/'</span><span class="p">,</span> <span class="ss">rabl</span><span class="p">:</span> <span class="s1">'v1/widgets'</span> <span class="k">do</span>
+  <span class="vi">@widgets</span> <span class="o">=</span> <span class="n">paginate</span><span class="p">(</span><span class="vi">@widgets</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+
+<p><em>From the grape-kaminari docs:</em></p>
+
+<p>Now you can make a HTTP request to your endpoint with the following parameters</p>
+
+<ul>
+<li>
+<code>page</code>: your current page (default: 1)</li>
+<li>
+<code>per_page</code>: how many to record in a page (default: 10)</li>
+<li>
+<code>offset</code>: the offset to start from (default: 0)</li>
+</ul><pre><code>curl -v http://host.dev/widgets?page=3&amp;offset=10
+</code></pre>
+
+<p>and the response will be paginated and also will include pagination headers</p>
+
+<pre><code>X-Total: 42
+X-Total-Pages: 5
+X-Page: 3
+X-Per-Page: 10
+X-Next-Page: 4
+X-Prev-Page: 2
+X-Offset: 10
+</code></pre>
 
 <h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <ol>
-<li>Fork it ( <a href="http://github.com/">http://github.com/</a>/grape_ape_rails/fork )</li>
+<li>Fork it</li>
 <li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
 <li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
 <li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
 <li>Create new Pull Request</li>
 </ol>
-      </section>
+        </section>
 
+        <aside id="sidebar">
+          <a href="https://github.com/mepatterson/grape_ape_rails/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/mepatterson/grape_ape_rails/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/mepatterson/grape_ape_rails"></a> is maintained by <a href="https://github.com/mepatterson">mepatterson</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+
+  
   </body>
 </html>
