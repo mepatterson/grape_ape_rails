@@ -180,6 +180,8 @@ message (human-friendly, user-presentable message that includes the code inside 
 }
 ```
 
+In the case of a validation error on a resource, there will additionally be a `data` key inside the error hash that includes Rails-style validation errors.
+
 IMPORTANT: In defining response structures, I made the decision (based on lots of research) to go with a plural resource key and an _always-array_ approach in the
 response hash. To put it another way:
 
