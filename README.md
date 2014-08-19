@@ -1,7 +1,7 @@
 # GrapeApeRails
 
 [![GitHub version](https://badge.fury.io/gh/mepatterson%2Fgrape_ape_rails.svg)](http://badge.fury.io/gh/mepatterson%2Fgrape_ape_rails)
-[![Build Status]https://semaphoreapp.com/api/v1/projects/dbb9cbd7-0767-4215-b3f8-faa25510b708/231133/shields_badge.png)](https://semaphoreapp.com/mepatterson/grape_ape_rails)
+[![Build Status](https://semaphoreapp.com/api/v1/projects/dbb9cbd7-0767-4215-b3f8-faa25510b708/231133/shields_badge.png)](https://semaphoreapp.com/mepatterson/grape_ape_rails)
 
 TODO: Write a gem description
 
