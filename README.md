@@ -12,7 +12,8 @@ together great, but can be tricky to integrate in a robust, clean way; GrapeApeR
 
 GrapeApeRails is opinionated. The goal is to make integration easier, so GrapeApeRails makes a number of integration decisions for you:
 
-* GrapeApeRails API endpoints expect JSON (for POST and PUT request bodies) and respond with JSON
+* API endpoints respond with JSON
+* API endpoints expect serialized JSON strings for POST and PUT bodies
 * JSON responses are wrapped in a structure that mostly resembles the JSON-RPC spec
 * GrapeApeRails APIs are header-versioned using the 'Accept' HTTP header
 * API endpoints automatically handle locale if provided (either via params[:locale] or the 'Accept-Language' header) and use the `http_accept_language` middleware
