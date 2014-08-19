@@ -186,8 +186,11 @@ IMPORTANT: In defining response structures, I made the decision (based on lots o
 response hash. To put it another way:
 
 If you ask for /widgets/1 you will get
+
 `{ "result" : { "widgets" : [ {<widget>} ] } }`
+
 and if you ask for /widgets you will get
+
 `{ "result" : { "widgets" : [ {widget1}, {widget2}, {widget3}, ... ] } }`
 
 ### Pagination
