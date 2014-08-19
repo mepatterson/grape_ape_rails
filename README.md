@@ -1,6 +1,7 @@
 # GrapeApeRails
 
 [![Gem Version](https://badge.fury.io/rb/grape_ape_rails.svg)](http://badge.fury.io/rb/grape_ape_rails)
+[![Code Climate](https://codeclimate.com/github/mepatterson/grape_ape_rails/badges/gpa.svg)](https://codeclimate.com/github/mepatterson/grape_ape_rails)
 [![Build Status](https://semaphoreapp.com/api/v1/projects/dbb9cbd7-0767-4215-b3f8-faa25510b708/231133/shields_badge.png)](https://semaphoreapp.com/mepatterson/grape_ape_rails)
 
 TODO: Write a gem description
