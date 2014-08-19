@@ -153,7 +153,42 @@ end
 
 In this case, it's expected that you've defined a MonkeySerializer class in your models directory, as usual with ActiveModelSerializers.
 
-## Pagination
+### JSON Response Structures
+
+Similar to the JSON-RPC spec, endpoints exposed using GrapeApeRails will present either a `result` hash or an `error` hash.
+The error hash will be composed of a `code` (a machine-friendly enum-like uppercase string) and a
+message (human-friendly, user-presentable message that includes the code inside brackets).
+
+```ruby
+# Successful response
+{
+  "result" : {
+    "widgets" : [
+      { "id" : 1, "name" : "Fancy Widget" },
+      { "id" : 2, "name" : "Other Thing" },
+      ...
+    ]
+  }
+}
+
+# Error response
+{
+  "error" : {
+    "code" : "UNAUTHORIZED",
+    "message" : "[UNAUTHORIZED] Requires a valid user authorization"
+  }
+}
+```
+
+IMPORTANT: In defining response structures, I made the decision (based on lots of research) to go with a plural resource key and an _always-array_ approach in the
+response hash. To put it another way:
+
+If you ask for /widgets/1 you will get
+`{ "result" : { "widgets" : [ {<widget>} ] } }`
+and if you ask for /widgets you will get
+`{ "result" : { "widgets" : [ {widget1}, {widget2}, {widget3}, ... ] } }`
+
+### Pagination
 
 GrapeApeRails uses Kaminari for pagination via the [grape-kaminari](https://github.com/monterail/grape-kaminari) gem.
 
