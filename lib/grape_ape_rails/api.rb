@@ -44,7 +44,7 @@ module GrapeApeRails
       klass = GrapeApeRails.const_set("#{name}Base", mounts_klass)
       api_key = api_key_from(args)
       api_version = name.underscore.gsub('_','.')
-      build_api_version_cascades_map(api_version, args)
+      update_api_version_cascades_map(api_version, args)
       update_api_keys_map(name, api_key)
       yield
       mount mounts_klass
@@ -78,12 +78,16 @@ module GrapeApeRails
         GrapeApeRails::API.api_keys_map.merge!({ name.underscore.gsub('_','.') => api_key })
       end
 
-      def build_api_version_cascades_map(api_version, args)
+      def update_api_version_cascades_map(api_version, args)
         if args[0].present? && args[0].is_a?(Array)
-          GrapeApeRails::API.api_version_cascades_map.merge!({ api_version => args[0].map{ |v| v.underscore.gsub('_','.') } })
+          arr = args[0]
         elsif args[1].present? && args[1].is_a?(Array)
-          GrapeApeRails::API.api_version_cascades_map.merge!({ api_version => args[1].map{ |v| v.underscore.gsub('_','.') } })
+          arr = args[1]
+        else
+          return #noop
         end
+        cascades = arr.map{ |v| v.underscore.gsub('_','.') }
+        GrapeApeRails::API.api_version_cascades_map.merge!({ api_version => cascades })
       end
     end
 
