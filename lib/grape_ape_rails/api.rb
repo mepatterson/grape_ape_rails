@@ -79,15 +79,15 @@ module GrapeApeRails
       end
 
       def update_api_version_cascades_map(api_version, args)
-        if args[0].present? && args[0].is_a?(Array)
-          arr = args[0]
-        elsif args[1].present? && args[1].is_a?(Array)
-          arr = args[1]
-        else
-          return #noop
-        end
+        return unless arr = cascades_array_from(args)
         cascades = arr.map{ |v| v.underscore.gsub('_','.') }
         GrapeApeRails::API.api_version_cascades_map.merge!({ api_version => cascades })
+      end
+
+      def cascades_array_from(args)
+        return args[0] if args[0].present? && args[0].is_a?(Array)
+        return args[1] if args[1].present? && args[1].is_a?(Array)
+        return nil
       end
     end
 
