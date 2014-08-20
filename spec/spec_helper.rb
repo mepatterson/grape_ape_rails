@@ -11,7 +11,7 @@ require 'factory_girl'
 require 'timecop'
 require 'pry'
 require 'webmock/rspec'
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(allow_localhost: true, allow: "codeclimate.com")
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
