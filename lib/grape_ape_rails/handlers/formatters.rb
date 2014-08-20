@@ -77,14 +77,11 @@ module Grape
         private
 
         def wrap_output(output)
-          # root_resource = endpoint.route.route_namespace.gsub('/','').pluralize
           template = MultiJson.dump({ result: "***" })
-          # output = "[#{output}]" if output[0] != '[' && output[-1] != ']'
           template.gsub(%Q("***"), output)
         end
 
         def view_path(template)
-          # api_version = endpoint.route.route_version || '.'
           if template.split('.')[-1] == 'rabl'
             File.join(env['api.tilt.root'], template)
           else
