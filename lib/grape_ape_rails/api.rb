@@ -42,17 +42,10 @@ module GrapeApeRails
       @gar_api_version = name
       mounts_klass = Class.new(GrapeApeRails::API)
       klass = GrapeApeRails.const_set("#{name}Base", mounts_klass)
-      api_key = GrapeApeRails.configuration.api_secret_key
-      api_key = args[0] if args[0].present? && args[0].is_a?(String)
-
+      api_key = api_key_from(args)
       api_version = name.underscore.gsub('_','.')
-      if args[0].present? && args[0].is_a?(Array)
-        GrapeApeRails::API.api_version_cascades_map.merge!({ api_version => args[0].map{ |v| v.underscore.gsub('_','.') } })
-      elsif args[1].present? && args[1].is_a?(Array)
-        GrapeApeRails::API.api_version_cascades_map.merge!({ api_version => args[1].map{ |v| v.underscore.gsub('_','.') } })
-      end
-      dotname = name.underscore.gsub('_','.')
-      GrapeApeRails::API.api_keys_map.merge!({ dotname => api_key })
+      build_api_version_cascades_map(api_version, args)
+      update_api_keys_map(name, api_key)
       yield
       mount mounts_klass
     ensure
@@ -70,6 +63,28 @@ module GrapeApeRails
       mounts_klass.send(:mount, name.constantize)
     rescue NameError => e
       puts "    [ERROR] Could not instantiate API Endpoints at '#{name}'. Maybe you still need to create the class file?"
+    end
+
+    private
+
+    class << self
+      def api_key_from(args)
+        api_key = GrapeApeRails.configuration.api_secret_key
+        api_key = args[0] if args[0].present? && args[0].is_a?(String)
+        api_key
+      end
+
+      def update_api_keys_map(name, api_key)
+        GrapeApeRails::API.api_keys_map.merge!({ name.underscore.gsub('_','.') => api_key })
+      end
+
+      def build_api_version_cascades_map(api_version, args)
+        if args[0].present? && args[0].is_a?(Array)
+          GrapeApeRails::API.api_version_cascades_map.merge!({ api_version => args[0].map{ |v| v.underscore.gsub('_','.') } })
+        elsif args[1].present? && args[1].is_a?(Array)
+          GrapeApeRails::API.api_version_cascades_map.merge!({ api_version => args[1].map{ |v| v.underscore.gsub('_','.') } })
+        end
+      end
     end
 
   end
