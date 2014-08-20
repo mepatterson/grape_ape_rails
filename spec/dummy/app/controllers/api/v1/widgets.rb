@@ -3,6 +3,10 @@ module API
     class Widgets < GrapeApeRails::API
       include GrapeApeRails::Handlers::All
 
+      get "/thing" do
+        { foo: 42 }
+      end
+
       resource :widgets do
         desc "Get a single Widget"
         get ':id', rabl: 'v1/widget' do

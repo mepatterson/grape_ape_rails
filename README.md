@@ -124,6 +124,23 @@ with `/widgets`
 In my example, I'm using the default Rabl-based templating. The `rabl` parameter expects a path to the .rabl template file,
 as found within /app/views/api/ ... all Rabl functionality should work as expected.
 
+NOTE: Unlike the ActiveModel Serializers, the Rabl formatter doesn't impose any sort of resource-keyed hash for the response.
+This is your responsibility to define in your Rabl template if you want to use the "plural key, always-array" standard.
+
+Example Rabl templates:
+```ruby
+# v1/base_widget.rabl
+attributes *Widget.column_names
+
+# single widget (v1/widget.rabl)
+collection [@widget] => :widgets
+extends "v1/base_widget"
+
+# array of multiple widgets (v1/widgets.rabl)
+collection @widgets => :widgets
+extends "v1/base_widget"
+```
+
 ### ActiveModel Serializers
 
 If you'd prefer ActiveModel Serializers over Rabl, GrapeApeRails supports that as well via a custom Grape formatter
@@ -151,6 +168,36 @@ end
 ```
 
 In this case, it's expected that you've defined a MonkeySerializer class in your models directory, as usual with ActiveModelSerializers.
+
+IMPORTANT: For ActiveModel Serializers, when defining the response structure, I made the decision (based on lots of research) to go with a plural resource key and an _always-array_ approach in the
+response hash. To put it another way:
+
+If you ask for /widgets/1 you will get
+
+`{ "result" : { "widgets" : [ {<widget>} ] } }`
+
+and if you ask for /widgets you will get
+
+`{ "result" : { "widgets" : [ {widget1}, {widget2}, {widget3}, ... ] } }`
+
+#### Overriding the ActiveModel Serializer resource key
+
+If you need, for some reason, to provide a different key in your response hash, you can
+override the resource key for the plural form of your resource.
+
+Let's say, for example, that you've created a `UserSerializer` but you want the JSON to use 'people'...
+
+```ruby
+class UserSerializer < ActiveModel::Serializer
+  attributes :name, :age, :hair_color
+
+  def resource_plural
+    'people'
+  end
+end
+```
+
+... GrapeApeRails will now always key the hash with `"people" : [...one or more people hashes...]` for both single (1-element array) and multiple (n-element array) records.
 
 ### JSON Response Structures
 
@@ -180,17 +227,6 @@ message (human-friendly, user-presentable message that includes the code inside 
 ```
 
 In the case of a validation error on a resource, there will additionally be a `data` key inside the error hash that includes Rails-style validation errors.
-
-IMPORTANT: In defining response structures, I made the decision (based on lots of research) to go with a plural resource key and an _always-array_ approach in the
-response hash. To put it another way:
-
-If you ask for /widgets/1 you will get
-
-`{ "result" : { "widgets" : [ {<widget>} ] } }`
-
-and if you ask for /widgets you will get
-
-`{ "result" : { "widgets" : [ {widget1}, {widget2}, {widget3}, ... ] } }`
 
 ### Pagination
 

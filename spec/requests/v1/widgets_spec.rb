@@ -9,6 +9,14 @@ describe API::V1::Widgets do
     end
   end
 
+  describe 'GET /thing' do
+    it "returns the expected json hash for a non-resource endpoint" do
+      req :get, "/thing"
+      json = MultiJson.load(response.body, symbolize_keys: true)
+      expect(json).to eql({ result: { foo: 42 } })
+    end
+  end
+
   describe "GET /widgets/:id/:name" do
     let(:widget) { FactoryGirl.create(:widget) }
 
