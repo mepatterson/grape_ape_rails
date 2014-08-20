@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/grape_ape_rails.svg)](http://badge.fury.io/rb/grape_ape_rails)
 [![Code Climate](https://codeclimate.com/github/mepatterson/grape_ape_rails/badges/gpa.svg)](https://codeclimate.com/github/mepatterson/grape_ape_rails)
+[![Test Coverage](https://codeclimate.com/github/mepatterson/grape_ape_rails/badges/coverage.svg)](https://codeclimate.com/github/mepatterson/grape_ape_rails)
 [![Build Status](https://semaphoreapp.com/api/v1/projects/dbb9cbd7-0767-4215-b3f8-faa25510b708/231133/shields_badge.png)](https://semaphoreapp.com/mepatterson/grape_ape_rails)
 
 The general purpose of this gem is to wrap the various best practices of integrating GrapeAPI within the context of a Rails app
