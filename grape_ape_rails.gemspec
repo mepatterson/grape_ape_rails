@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport'
   spec.add_dependency 'multi_json'
   spec.add_dependency 'oj'
-  spec.add_dependency "grape", "0.8.0"
+  spec.add_dependency "grape", "0.9.0"
   spec.add_dependency 'grape-rabl'
   spec.add_dependency 'grape-kaminari'
   spec.add_dependency 'grape-rails-cache'
