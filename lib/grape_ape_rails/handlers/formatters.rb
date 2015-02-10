@@ -40,7 +40,8 @@ module Grape
           return %Q[{\"result\":#{MultiJson.dump(serializer)}}] if [serializer.object].flatten.size > 1
 
           serializer.root = false
-          %Q[{\"result\":{\"#{plural}\":[#{MultiJson.dump(serializer)}]}}]
+          out = serializer.object.try(:empty?) ? nil : MultiJson.dump(serializer)
+          %Q[{\"result\":{\"#{plural}\":[#{out}]}}]
         else
           Grape::Formatter::GarJsonSerializer.call serializer.object, env
         end

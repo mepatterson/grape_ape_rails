@@ -27,4 +27,14 @@ describe API::V1::Monkeys do
       expect(json_result[:monkeys].size).to eql 3
     end
   end
+
+  describe "GET /nothings" do
+    it "returns proper empty array [], using the ActiveModelSerializers" do
+      3.times { FactoryGirl.create :monkey }
+      req :get, "/nothing_monkeys"
+      expect(response.status).to eql 200
+      expect(json_result[:nothing_monkeys]).to eql([])
+    end
+  end
+
 end

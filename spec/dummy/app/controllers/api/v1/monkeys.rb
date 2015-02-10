@@ -5,6 +5,13 @@ module API
 
       formatter :json, Grape::Formatter::GarActiveModelSerializers
 
+      resource :nothing_monkeys do
+        desc "Get nothing"
+        get '/' do
+          @monkeys = []
+        end
+      end
+
       resource :monkeys do
         desc "Get many monkeys"
         get '/' do
