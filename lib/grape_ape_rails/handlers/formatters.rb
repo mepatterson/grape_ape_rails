@@ -34,23 +34,13 @@ module Grape
     module GarActiveModelSerializers
       def self.call(resource, env)
         if serializer = Grape::Formatter::ActiveModelSerializers.fetch_serializer(resource, env)
-          # single = serializer.try(:resource_singular) || serializer.object.class.name.underscore
-          # default_plural = default_plural = serializer.object.class.name.underscore.pluralize
-          # if serializer.object.is_a?(Array)
-            # single = serializer.object.first.class.name.underscore
-            # default_plural = serializer.object.first.class.name.underscore.pluralize
-          # end
-          # plural = serializer.try(:resource_plural) || default_plural
           single = serializer.try(:resource_singular) || serializer.instance_variable_get(:@resource_name).try(:singularize) || serializer.instance_variable_get(:@object).class.name.underscore
           plural = serializer.try(:resource_plural) || serializer.instance_variable_get(:@resource_name) || single.pluralize
-          hash = serializer.as_json(root: false)
-          output = if hash.is_a?(Hash) && hash[single].present?
-            hash[single].is_a?(Array) ? hash[single] : [hash[single]]
-          else
-            hash.is_a?(Array) ? hash : [hash]
-          end
-          template = MultiJson.dump({ result: { plural => "***" } })
-          template.gsub(%Q("***"), MultiJson.dump(output))
+
+          return %Q[{\"result\":#{MultiJson.dump(serializer)}}] if [serializer.object].flatten.size > 1
+
+          serializer.root = false
+          %Q[{\"result\":{\"#{plural}\":[#{MultiJson.dump(serializer)}]}}]
         else
           Grape::Formatter::GarJsonSerializer.call serializer.object, env
         end

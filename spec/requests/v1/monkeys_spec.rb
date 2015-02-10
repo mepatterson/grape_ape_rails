@@ -12,11 +12,19 @@ describe API::V1::Monkeys do
       expect(response.status).to eql 401
     end
 
-    it "returns a monkey by id, using the ActiveModelSerializers" do
+    it "returns a single monkey by id, using the ActiveModelSerializers" do
       req :get, "/monkeys/#{monkey.id}"
       expect(response.status).to eql 200
       expect(json_result[:monkeys].size).to eql 1
       expect(json_result[:monkeys].first[:name]).to eql "Frank the Monkey"
+    end
+  end
+  describe "GET /monkeys" do
+    it "returns multiple monkeys, using the ActiveModelSerializers" do
+      3.times { FactoryGirl.create :monkey }
+      req :get, "/monkeys"
+      expect(response.status).to eql 200
+      expect(json_result[:monkeys].size).to eql 3
     end
   end
 end
