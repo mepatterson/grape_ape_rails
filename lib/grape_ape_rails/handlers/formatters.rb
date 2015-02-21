@@ -37,11 +37,18 @@ module Grape
           single = serializer.try(:resource_singular) || serializer.instance_variable_get(:@resource_name).try(:singularize) || serializer.instance_variable_get(:@object).class.name.underscore
           plural = serializer.try(:resource_plural) || serializer.instance_variable_get(:@resource_name) || single.pluralize
 
-          return %Q[{\"result\":#{MultiJson.dump(serializer)}}] if [serializer.object].flatten.size > 0
+          return %Q[{\"result\":#{MultiJson.dump(serializer)}}] if [serializer.object].flatten.size > 1
 
           serializer.root = false
           out = serializer.object.try(:empty?) ? nil : MultiJson.dump(serializer)
-          %Q[{\"result\":{\"#{plural}\":[#{out}]}}]
+          if out.present? && out[0,1] == '[' && out[-1,1] == ']'
+            # was probably a single mongoid criteria object or some enumerable that serialized itself into a json array
+            out = out
+          else
+            # its a singular record, so we want to put it in an array
+            out = "[#{out}]"
+          end
+          %Q[{\"result\":{\"#{plural}\":#{out}}}]
         else
           Grape::Formatter::GarJsonSerializer.call serializer.object, env
         end
