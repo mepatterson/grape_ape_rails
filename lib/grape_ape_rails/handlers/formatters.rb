@@ -37,7 +37,7 @@ module Grape
           single = serializer.try(:resource_singular) || serializer.instance_variable_get(:@resource_name).try(:singularize) || serializer.instance_variable_get(:@object).class.name.underscore
           plural = serializer.try(:resource_plural) || serializer.instance_variable_get(:@resource_name) || single.pluralize
 
-          return %Q[{\"result\":#{MultiJson.dump(serializer)}}] if [serializer.object].flatten.size > 1
+          return %Q[{\"result\":#{MultiJson.dump(serializer)}}] if [serializer.object].flatten.size > 0
 
           serializer.root = false
           out = serializer.object.try(:empty?) ? nil : MultiJson.dump(serializer)
