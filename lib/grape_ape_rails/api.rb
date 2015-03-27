@@ -2,7 +2,7 @@ require 'grape'
 require 'grape-kaminari'
 require 'grape-rails-cache'
 require 'swagger/grape_swagger_modified'
-require 'hashie_rails' if defined?(::Rails)
+require 'hashie-forbidden_attributes' if defined?(::Rails)
 require 'http_accept_language'
 require 'grape_ape_rails/base'
 require 'grape_ape_rails/handlers/header_versioning'
@@ -49,11 +49,13 @@ module GrapeApeRails
       yield
       mount mounts_klass
     ensure
-      puts "Swaggering #{api_version} endpoints..."
-      klass.add_swagger_documentation hide_documentation_path: true,
-                                api_version: api_version.gsub('.','_'),
-                                mount_with_version: true,
-                                mount_path: "/api/docs"
+      if GrapeApeRails.configuration.swagger_documentation
+        puts "Swaggering #{api_version} endpoints at /api/docs ..."
+        klass.add_swagger_documentation hide_documentation_path: true,
+                                  api_version: api_version.gsub('.','_'),
+                                  mount_with_version: true,
+                                  mount_path: "/api/docs"
+      end
     end
 
     def API.grape_mount(resource)

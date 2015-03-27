@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'grape-active_model_serializers'
   spec.add_dependency 'http_accept_language'
   spec.add_dependency 'rabl'
-  spec.add_dependency 'hashie_rails'
+  spec.add_dependency 'hashie-forbidden_attributes'
 
   spec.add_development_dependency "rails", "~> 4.1"
   spec.add_development_dependency "minitest"

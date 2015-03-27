@@ -39,7 +39,8 @@ module GrapeApeRails
   class Configuration
     attr_accessor :app_name, :organization_name,
                   :api_secret_key, :api_header_security_enabled,
-                  :available_locales, :security_envelope_debug
+                  :available_locales, :security_envelope_debug,
+                  :swagger_documentation
 
     def initialize
       @app_name = nil
@@ -48,6 +49,7 @@ module GrapeApeRails
       @api_header_security_enabled = true
       @api_security_algorithm = "sha256"
       @available_locales = [ :en ]
+      @swagger_documentation = true
       # ...
     end
   end

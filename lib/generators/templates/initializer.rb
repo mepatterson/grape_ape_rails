@@ -5,6 +5,7 @@ GrapeApeRails.configure do |config|
   # config.api_header_security_enabled = true
   # config.api_security_algorithm = "sha256"
   # config.security_envelope_debug = false
+  # config.swagger_documentation = true
   config.available_locales = %i[ en ]
 end
 
