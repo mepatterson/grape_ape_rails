@@ -29,8 +29,14 @@ module Grape
 
       def combine_namespaces(app)
         app.endpoints.each do |endpoint|
-          ns = endpoint.settings.stack.last[:namespace]
-          @combined_namespaces[ns.space] = ns if ns
+          ns = if endpoint.respond_to?(:namespace_stackable)
+                 endpoint.namespace_stackable(:namespace).last
+               else
+                 endpoint.settings.stack.last[:namespace]
+               end
+          # use the full namespace here (not the latest level only)
+          # and strip leading slash
+          @combined_namespaces[endpoint.namespace.sub(/^\//, '')] = ns if ns
 
           combine_namespaces(endpoint.options[:app]) if endpoint.options[:app]
         end
@@ -87,7 +93,6 @@ module Grape
             end
 
             desc api_doc.delete(:desc), params: api_doc.delete(:params)
-            @last_description.merge!(api_doc)
             get @@mount_path do
               header['Access-Control-Allow-Origin']   = '*'
               header['Access-Control-Request-Method'] = '*'
@@ -133,7 +138,6 @@ module Grape
                 required: true
               }
             }.merge(specific_api_doc.delete(:params) || {})
-            @last_description.merge!(specific_api_doc)
             get "#{@@mount_path}/:name" do
               header['Access-Control-Allow-Origin']   = '*'
               header['Access-Control-Request-Method'] = '*'
