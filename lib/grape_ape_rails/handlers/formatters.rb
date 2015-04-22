@@ -50,7 +50,8 @@ module Grape
           end
           %Q[{\"result\":{\"#{plural}\":#{out}}}]
         else
-          Grape::Formatter::GarJsonSerializer.call serializer.object, env
+          # Grape::Formatter::GarJsonSerializer.call serializer.object, env
+          Grape::Formatter::GarJsonSerializer.call resource, env
         end
       end
     end
