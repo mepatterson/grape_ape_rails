@@ -6,6 +6,7 @@ require 'hashie-forbidden_attributes' if defined?(::Rails)
 require 'http_accept_language'
 require 'grape_ape_rails/base'
 require 'grape_ape_rails/handlers/header_versioning'
+require 'grape_ape_rails/handlers/path_versioning'
 require 'grape_ape_rails/handlers/rails_logging'
 
 
