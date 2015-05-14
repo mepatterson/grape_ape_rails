@@ -34,25 +34,33 @@ module Grape
     module GarActiveModelSerializers
       def self.call(resource, env)
         if serializer = Grape::Formatter::ActiveModelSerializers.fetch_serializer(resource, env)
-          single = serializer.try(:resource_singular) || serializer.instance_variable_get(:@resource_name).try(:singularize) || serializer.instance_variable_get(:@object).class.name.underscore
-          plural = serializer.try(:resource_plural) || serializer.instance_variable_get(:@resource_name) || single.pluralize
-
-          return %Q[{\"result\":#{MultiJson.dump(serializer)}}] if [serializer.object].flatten.size > 1
-
           serializer.root = false
-          out = serializer.object.try(:empty?) ? nil : MultiJson.dump(serializer)
-          if out.present? && out[0,1] == '[' && out[-1,1] == ']'
-            # was probably a single mongoid criteria object or some enumerable that serialized itself into a json array
-            out = out
-          else
-            # its a singular record, so we want to put it in an array
-            out = "[#{out}]"
-          end
-          %Q[{\"result\":{\"#{plural}\":#{out}}}]
+          %Q[{\"result\":{\"#{pluralized_resource(serializer, env)}\":#{dump_to_json_array_string(serializer)}}}]
         else
-          # Grape::Formatter::GarJsonSerializer.call serializer.object, env
           Grape::Formatter::GarJsonSerializer.call resource, env
         end
+      end
+
+      private
+
+      def self.dump_to_json_array_string(serializer)
+        str = serializer.object.try(:empty?) ? nil : MultiJson.dump(serializer)
+        str = "[#{str}]" unless is_serialized_array_string?(str)
+        str
+      end
+
+      def self.is_serialized_array_string?(str)
+        str.present? && str[0,1] == '[' && str[-1,1] == ']'
+      end
+
+      def self.pluralized_resource(serializer, env)
+        single = serializer.try(:resource_singular) || serializer.instance_variable_get(:@resource_name).try(:singularize) || serializer.instance_variable_get(:@object).class.name.underscore
+        plural = serializer.try(:resource_plural) || serializer.instance_variable_get(:@resource_name) || single.pluralize
+        # allow the pluralized resource name to be overriden with a custom route setting
+        if env["rack.routing_args"][:route_info].route_settings[:custom] && env["rack.routing_args"][:route_info].route_settings[:custom][:resource_plural]
+          plural = env["rack.routing_args"][:route_info].route_settings[:custom][:resource_plural].to_s.downcase
+        end
+        plural
       end
     end
 

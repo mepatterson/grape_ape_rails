@@ -11,7 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804173544) do
+ActiveRecord::Schema.define(version: 20150514153831) do
+
+  create_table "bananas", force: true do |t|
+    t.string  "size"
+    t.integer "monkey_id"
+  end
 
   create_table "monkeys", force: true do |t|
     t.string   "name"

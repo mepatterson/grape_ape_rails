@@ -24,6 +24,12 @@ module API
           @monkey = Monkey.find(params[:id])
           @monkey
         end
+
+        desc "Get a single Monkey's bananas"
+        route_setting :custom, resource_plural: 'bananas'
+        get ':id/bananas' do
+          @bananas = Monkey.find(params[:id]).bananas
+        end
       end
     end
   end

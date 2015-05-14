@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 describe API::V1::Monkeys do
+  describe 'GET /monkeys/:id/bananas' do
+    let(:monkey) { FactoryGirl.create(:monkey_with_bananas) }
+    it 'succeeds' do
+      req :get, "/monkeys/#{monkey.id}/bananas"
+      expect(response.status).to eql 200
+    end
+    it 'returns the bananas in an array with key `bananas`' do
+      req :get, "/monkeys/#{monkey.id}/bananas"
+      expect(json_result.has_key?(:bananas)).to eql(true), "JSON expected to have key :bananas but it did not"
+      expect(json_result[:bananas].size).to eql(monkey.bananas.size)
+    end
+  end
+
   describe "GET /monkeys/:id" do
     let(:monkey) { FactoryGirl.create(:monkey) }
 

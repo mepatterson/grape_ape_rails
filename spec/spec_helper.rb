@@ -61,9 +61,23 @@ FactoryGirl.define do
     rads          150
   end
 
+  factory :banana do
+    size          "big"
+    monkey
+  end
+
   factory :monkey do
     name          "Frank the Monkey"
     color         "brown"
+
+    factory :monkey_with_bananas do
+      ignore do
+        bananas_count 5
+      end
+      after(:create) do |monkey, eval|
+        create_list(:banana, eval.bananas_count, monkey: monkey)
+      end
+    end
   end
 end
 
